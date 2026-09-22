@@ -101,6 +101,22 @@ animateElements.forEach(el => {
     fadeObserver.observe(el);
 });
 
+// Animate education items
+const educationItems = document.querySelectorAll('.education-item');
+
+const eduObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            eduObserver.unobserve(entry.target);
+        }
+    });
+}, { threshold: 0.1 });
+
+educationItems.forEach(item => {
+    eduObserver.observe(item);
+});
+
 // Add a simple console greeting
 console.log('%c👋 Hello! Welcome to my CV!', 'font-size: 16px; color: #2563eb;');
 console.log('%cBuilt with ❤️ by Anthony Mazza', 'font-size: 12px; color: #666;');
