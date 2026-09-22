@@ -117,6 +117,83 @@ educationItems.forEach(item => {
     eduObserver.observe(item);
 });
 
-// Add a simple console greeting
-console.log('%c👋 Hello! Welcome to my CV!', 'font-size: 16px; color: #2563eb;');
-console.log('%cBuilt with ❤️ by Anthony Mazza', 'font-size: 12px; color: #666;');
+// Typing effect
+const typingTexts = [
+    "Technical Support Specialist",
+    "Cybersecurity Student",
+    "Problem Solver",
+    "Tech Enthusiast"
+];
+const typingElement = document.getElementById('typingText');
+let textIndex = 0;
+let charIndex = 0;
+let isDeleting = false;
+
+function typeEffect() {
+    const currentText = typingTexts[textIndex];
+    
+    if (!isDeleting) {
+        typingElement.textContent = currentText.substring(0, charIndex + 1);
+        charIndex++;
+        
+        if (charIndex === currentText.length) {
+            isDeleting = true;
+            setTimeout(typeEffect, 2000);
+            return;
+        }
+        setTimeout(typeEffect, 100);
+    } else {
+        typingElement.textContent = currentText.substring(0, charIndex);
+        charIndex--;
+        
+        if (charIndex === 0) {
+            isDeleting = false;
+            textIndex = (textIndex + 1) % typingTexts.length;
+            setTimeout(typeEffect, 500);
+            return;
+        }
+        setTimeout(typeEffect, 50);
+    }
+}
+
+// Start typing effect when page loads
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(typeEffect, 1000);
+});
+
+// Counter animation for hero stats
+const animateCounters = () => {
+    const counters = document.querySelectorAll('.stat-number');
+    counters.forEach(counter => {
+        const target = parseInt(counter.getAttribute('data-count'));
+        const duration = 2000;
+        const step = target / (duration / 16);
+        let current = 0;
+        
+        const updateCounter = () => {
+            current += step;
+            if (current < target) {
+                counter.textContent = Math.floor(current);
+                requestAnimationFrame(updateCounter);
+            } else {
+                counter.textContent = target;
+            }
+        };
+        updateCounter();
+    });
+};
+
+// Intersection Observer for counter animation
+const counterObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            animateCounters();
+            counterObserver.unobserve(entry.target);
+        }
+    });
+}, { threshold: 0.5 });
+
+const heroStats = document.querySelector('.hero-stats');
+if (heroStats) {
+    counterObserver.observe(heroStats);
+}
